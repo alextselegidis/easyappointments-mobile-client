@@ -5,6 +5,7 @@ App Android using Easy!Appointments system (https://github.com/alextselegidis/ea
 This application is designed for a mobility simple management of the Easy!Appointments system.
 
 # Requirements
+0 - Graphics (icons, theme, etc...)
 1 - Operator login<br>
 2 - Next appointments list<br>
 3 - Single appointment details<br>
