@@ -3,10 +3,22 @@
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_invalid_password">Password invalid</string>
+    <string name="prompt_url">Url</string>
+    <string name="error_invalid_url">Url not valid: write url like http://mydomain.com</string>
+    <string name="autologin">Autologin</string>
+    <string name="rememberme">Remember me</string>
+    <string name="error_login">Login error</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="provider_not_found">Provider not found</string>
+    <string name="error_network">Network error</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

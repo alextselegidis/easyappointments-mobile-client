@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,7 +12,6 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,8 +19,23 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.easyappointments.common.Validator;
+import com.easyappointments.db.SettingsModel;
+import com.easyappointments.remote.ea.data.Options;
+import com.easyappointments.remote.ea.model.ws.ProviderModel;
+import com.easyappointments.remote.ea.service.ProviderService;
+import com.easyappointments.remote.ea.service.ProviderServiceFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Response;
 
 /**
  * A login screen that offers login via username/password.
@@ -28,20 +43,17 @@ import android.widget.TextView;
 public class LoginActivity extends AppCompatActivity {
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "abs:123", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private SettingsModel settings = null;
 
     // UI references.
-    private EditText mEmailView;
+    private EditText mUsernameView;
     private EditText mPasswordView;
+    private EditText mUrl;
+    private CheckBox mRememberMe;
+
     private View mProgressView;
     private View mLoginFormView;
 
@@ -50,7 +62,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.username);
+        mUrl = (EditText) findViewById(R.id.url);
+        mUsernameView = (EditText) findViewById(R.id.username);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -64,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        mRememberMe = (CheckBox) findViewById(R.id.rememberme);
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -75,6 +90,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        settings = SettingsModel.loadSettings();
+        mUrl.setText(settings.url);
+        mUsernameView.setText(settings.username);
+        mPasswordView.setText(settings.password);
+        mRememberMe.setChecked(settings.rememberme);
     }
 
     private void HideSoftKeyboard(){
@@ -94,27 +115,30 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUsernameView.setError(null);
         mPasswordView.setError(null);
+        mUrl.setError(null);
+
 
         // Store values at the time of the login attempt.
-        String username = mEmailView.getText().toString();
+        String username = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String url = mUrl.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
+        if(Validator.absoluteUrlIsValid(url) == false){
+            mUrl.setError(getString(R.string.error_invalid_url));
+            focusView = mUrl;
+            cancel = true;
+        }else if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        }
-
-        // Check for a valid username address.
-        if (TextUtils.isEmpty(username)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        }else if (TextUtils.isEmpty(username)) {
+            mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
             cancel = true;
         }
 
@@ -126,19 +150,14 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask = new UserLoginTask(this, username, password, url);
             mAuthTask.execute((Void) null);
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -160,58 +179,54 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
+        private String errorMessage = getString(R.string.unknown_error);
+        private final Context ctx;
+        private final String mUsername;
         private final String mPassword;
+        private final String mUrl;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        private ProviderModel providerModel;
+
+        UserLoginTask(Context ctx, String username, String password, String url) {
+            this.ctx=ctx;
+            mUsername = username;
             mPassword = password;
+            mUrl = url;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
+            ProviderService t = ProviderServiceFactory.getInstance(mUsername,mPassword, mUrl);
             try {
-                // Simulate network access.
-                Thread.sleep(8000);
-            } catch (InterruptedException e) {
+                Map<String, String> filters = new HashMap<>();
+                filters.put(Options.fields, ProviderModel.fields.id.toString());
+                filters.put(Options.fields, ProviderModel.fields.firstName.toString());
+                filters.put(Options.fields, ProviderModel.fields.lastName.toString());
+                filters.put(Options.fields, ProviderModel.fields.email.toString());
+
+                Response<List<ProviderModel>> r = t.get(filters).execute();
+                List<ProviderModel> pms = r.body();
+
+                if(pms != null && pms.size() == 1) {
+                    providerModel = pms.get(0);
+                    return true;
+                }
+
+                errorMessage = getString(R.string.provider_not_found);
+                return false;
+            } catch (IOException e) {
+                errorMessage = getString(R.string.error_network);
+                return false;
+            } catch (Exception ex){
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // Login error
-            return false;
         }
 
         @Override
@@ -220,11 +235,25 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-             //TODO: access to app
-                Snackbar.make(mLoginFormView, "Login success", Snackbar.LENGTH_SHORT).show();
+                settings.url = mUrl;
+
+                if(mRememberMe.isChecked()){
+                    settings.username = mUsername;
+                    settings.password = mPassword;
+                    settings.providerId = providerModel.id;
+                    settings.firstName = providerModel.firstName;
+                    settings.lastName = providerModel.lastName;
+                    settings.email = providerModel.email;
+                }
+
+                settings.rememberme = mRememberMe.isChecked();
+
+                settings.save();
+
+                Intent homeActivity = new Intent(this.ctx, MainActivity.class);
+                startActivity(homeActivity);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                Snackbar.make(mLoginFormView, getString(R.string.error_login)+": "+errorMessage, Snackbar.LENGTH_SHORT).show();
             }
         }
 
