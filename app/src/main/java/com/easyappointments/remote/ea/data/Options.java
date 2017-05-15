@@ -8,6 +8,8 @@ public abstract class Options {
     public static final String q = "q";
     public static final String fields = "fields";
     public static final String sort = "sort";
+    public static final String sort_desc = "-";
+    public static final String sort_asc = "+";
     public static final String page = "page";
     public static final String length = "length";
 }

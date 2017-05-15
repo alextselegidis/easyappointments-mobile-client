@@ -2,6 +2,7 @@ package com.easyappointments.common;
 
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 /**
@@ -9,7 +10,7 @@ import android.text.TextUtils;
  */
 
 public final class Validator {
-    public static boolean absoluteUrlIsValid(String uri){
+    public static boolean absoluteUrlIsValid(@NonNull String uri){
 
         if(!uri.endsWith("/"))
             uri += "/";

@@ -1,4 +1,4 @@
-package com.easyappointments.remote.ea.service;
+package com.easyappointments.remote.ea.service.provider;
 
 import com.easyappointments.remote.ea.model.ws.ProviderModel;
 

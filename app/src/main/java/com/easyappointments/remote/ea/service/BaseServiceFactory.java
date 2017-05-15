@@ -4,6 +4,10 @@ import android.support.compat.BuildConfig;
 import android.util.Base64;
 import android.util.Log;
 
+import com.easyappointments.db.SettingsModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +45,11 @@ class LoggingInterceptor implements Interceptor {
 abstract class BaseServiceFactory {
     private final static String API_URL="/index.php/api/v1/";
 
+    static <T> T getClient(Class<T> cls){
+        SettingsModel sts = SettingsModel.loadSettings();
+        return getClient(cls, sts.username, sts.password, sts.url);
+    }
+
     static <T> T getClient(Class<T> cls, String username, String psw, String url) {
 
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -67,8 +76,16 @@ abstract class BaseServiceFactory {
 
         OkHttpClient client = builder.build();
 
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .create();
+
         Retrofit retrofit =
-                new Retrofit.Builder().baseUrl(url+API_URL).client(client).addConverterFactory(GsonConverterFactory.create()).build();
+                new Retrofit.Builder()
+                        .baseUrl(url+API_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
 
         return retrofit.create(cls);
     }

@@ -21,4 +21,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="error_customer_not_found">Customer not found</string>
+    <string name="error_load_appointments">Error loading appointments</string>
+    <string name="error_service_not_found">Service not found</string>
 </resources>
