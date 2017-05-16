@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.easyappointments.common.Formatter;
-import com.easyappointments.common.task.CustomerTask;
-import com.easyappointments.common.task.ServiceTask;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
 import com.easyappointments.remote.ea.model.ws.CustomerModel;
@@ -30,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 
 import retrofit2.Response;
 
-public class AppointmentRecyclerViewAdapter extends RecyclerView.Adapter<AppointmentRecyclerViewAdapter.ViewHolder> {
+public class AppointmentRecyclerViewAdapter extends RecyclerView.Adapter<AppointmentRecyclerViewAdapter.ViewHolder>  {
 
     private final List<AppointmentsModel> mApps;
     private final IAppointmentsInteractionFragment mListener;
@@ -51,20 +49,24 @@ public class AppointmentRecyclerViewAdapter extends RecyclerView.Adapter<Appoint
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mApp = mApps.get(position);
 
-        if(holder.mApp.customerModel != null) {
-            holder.mCustomer.setText(holder.mApp.customerModel.toString());
+        if(holder.mApp.getCustomerModel() != null) {
+            holder.mCustomer.setText(holder.mApp.getCustomerModel().toString());
         }else{
-            holder.mCustomer.setText(R.string.error_customer_not_found);
+            holder.mCustomer.setText(R.string.not_available);
         }
+        /*else{
+            holder.mCustomer.setText(R.string.error_customer_not_found);
+        }*/
 
         //date
         holder.mDate.setText(Formatter.formatDate(holder.mApp.start));
 
-        if(holder.mApp.serviceModel != null) {
-            holder.mService.setText(holder.mApp.serviceModel.name);
-        }else{
-            holder.mService.setText(R.string.error_service_not_found);
+        if(holder.mApp.getServiceModel() != null) {
+            holder.mService.setText(holder.mApp.getServiceModel().name);
         }
+        /*else{
+            holder.mService.setText(R.string.error_service_not_found);
+        }*/
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

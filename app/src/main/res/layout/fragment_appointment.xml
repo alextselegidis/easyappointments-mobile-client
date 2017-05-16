@@ -9,18 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:text="Massimiliano Turrotti"
         android:textAppearance="?attr/textAppearanceSearchResultTitle" />
 
     <TextView
         android:id="@+id/app_date"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="@dimen/text_margin"
-        android:text="01/01/2017 18:00"
+        android:layout_margin="@dimen/text_margin"
+        android:textSize="@dimen/text_size_app_date"
         android:textAppearance="?attr/textAppearanceSearchResultSubtitle" />
 
     <TextView
@@ -29,6 +27,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:text="Service test"
         android:textAppearance="?attr/textAppearanceSearchResultSubtitle" />
 </RelativeLayout>

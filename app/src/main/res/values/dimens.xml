@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="fragment_item_height">80dp</dimen>
+    <dimen name="text_size_app_date">10sp</dimen>
 </resources>

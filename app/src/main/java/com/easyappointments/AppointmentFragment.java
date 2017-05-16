@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.easyappointments.common.task.CustomerTask;
-import com.easyappointments.common.task.ServiceTask;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
 import com.easyappointments.remote.ea.model.ws.CustomerModel;
@@ -125,13 +123,15 @@ public class AppointmentFragment extends Fragment {
             showProgress(true);
 
             Map<String, String> filters = new HashMap<>();
-            filters.put(Options.sort, Options.sort_asc + AppointmentsModel.fields.start.toString());
+            filters.put(Options.sort, Options.sort_desc + AppointmentsModel.fields.start.toString());
+            filters.put(Options.page, "1");
+            filters.put(Options.length, "1");
 
             try {
                 Response<List<AppointmentsModel>> appsResp = appService.get(filters).execute();
                 lastAppointments = appsResp.body();
 
-                return true;
+                return lastAppointments != null;
             } catch (IOException e) {
                 lastAppointments = new ArrayList<>(0);
                 errorMessage = getString(R.string.error_network);
@@ -145,49 +145,7 @@ public class AppointmentFragment extends Fragment {
             showProgress(false);
 
             if (success) {
-                int nAppointments = lastAppointments.size();
-
-                Integer[] customersIds = new Integer[nAppointments];
-                for(int i = 0; i < nAppointments; i++){
-                    customersIds[i] = lastAppointments.get(i).customerId;
-                }
-
-                CustomerTask customerTask = new CustomerTask();
-                customerTask.execute(customersIds);
-
-                Integer[] servicesIds = new Integer[nAppointments];
-                for(int i = 0; i < nAppointments; i++){
-                    servicesIds[i] = lastAppointments.get(i).serviceId;
-                }
-
-                ServiceTask serviceTask = new ServiceTask();
-                serviceTask.execute(servicesIds);
-
-                try {
-                    if(customerTask.get() && serviceTask.get()){
-                        for(AppointmentsModel am : lastAppointments){
-                            for(CustomerModel cf : customerTask.customers){
-                                if(cf.id == am.customerId){
-                                    am.customerModel = cf;
-                                    break;
-                                }
-                            }
-
-                            for(ServiceModel sf : serviceTask.services){
-                                if(sf.id == am.serviceId){
-                                    am.serviceModel = sf;
-                                    break;
-                                }
-                            }
-                        }
-
-                        recyclerView.setAdapter(new AppointmentRecyclerViewAdapter(lastAppointments, mListener));
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                recyclerView.setAdapter(new AppointmentRecyclerViewAdapter(lastAppointments, mListener));
             } else {
                 Snackbar.make(recyclerView, getString(R.string.error_load_appointments)+": "+errorMessage, Snackbar.LENGTH_SHORT).show();
             }
