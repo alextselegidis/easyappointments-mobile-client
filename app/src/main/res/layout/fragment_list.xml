@@ -29,6 +29,6 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.easyappointments.AppointmentFragment"
-        tools:listitem="@layout/fragment_appointment" />
+        tools:listitem="@layout/fragment_item" />
 
 </LinearLayout>

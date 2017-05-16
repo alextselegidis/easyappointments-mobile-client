@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
+import com.easyappointments.remote.ea.model.ws.CustomerModel;
 
-public class MainActivity extends AppCompatActivity implements IAppointmentsInteractionFragment {
+public class MainActivity extends AppCompatActivity {
     private AppointmentFragment appsFragment;
 
     @Override
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements IAppointmentsInte
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        getSupportFragmentManager().beginTransaction().add(R.id.main_content, appsFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, appsFragment).commit();
                         return true;
                     case R.id.navigation_dashboard:
                         return true;
@@ -37,11 +37,6 @@ public class MainActivity extends AppCompatActivity implements IAppointmentsInte
         });
 
         appsFragment = new AppointmentFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.main_content, appsFragment).commit();
-    }
-
-    @Override
-    public void onSelect(AppointmentsModel app) {
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, appsFragment).commit();
     }
 }

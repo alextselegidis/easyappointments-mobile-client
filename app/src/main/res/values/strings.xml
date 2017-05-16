@@ -18,11 +18,12 @@
     <string name="provider_not_found">Provider not found</string>
     <string name="error_network">Network error</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_appointments">Appointments</string>
+    <string name="title_customers">Customers</string>
+    <string name="title_services">Services</string>
     <string name="error_customer_not_found">Customer not found</string>
     <string name="error_load_appointments">Error loading appointments</string>
     <string name="error_service_not_found">Service not found</string>
     <string name="not_available">Not available</string>
+    <string name="title_fragment_next_appointment">Next appointments</string>
 </resources>
