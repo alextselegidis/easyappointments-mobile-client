@@ -2,6 +2,7 @@ package com.easyappointments.remote.ea.service.customer;
 
 import com.easyappointments.remote.ea.model.ws.CustomerModel;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -14,6 +15,8 @@ import retrofit2.http.QueryMap;
  */
 
 public interface CustomerService {
+    @GET("customers")
+    Call<List<CustomerModel>> get(@QueryMap Map<String, String> options);
     @GET("customers/{id}")
     Call<CustomerModel> get(@Path("id") int id);
     @GET("customers/{id}")

@@ -26,16 +26,24 @@ public abstract class BaseFragment<T extends BaseModel> extends Fragment impleme
 
     protected IActionFragment<T> mListener;
     protected Context context;
+    protected boolean refresh = true;
 
     private int titleRes;
     protected RecyclerView recyclerView;
     private ProgressBar progressBar;
 
-    public BaseFragment(int resourceTitle, int resourceLayout, int resourceRecyclerView, int resourceProgressBar){
+    protected BaseFragment(int resourceTitle, int resourceLayout, int resourceRecyclerView, int resourceProgressBar){
         this.titleRes = resourceTitle;
         this.resourceRecyclerView=resourceRecyclerView;
         this.resourceProgressBar = resourceProgressBar;
         this.resourceLayout=resourceLayout;
+    }
+
+    protected BaseFragment(int resourceTitle){
+        this(resourceTitle,
+                R.layout.fragment_list,
+                R.id.recyclerView_list,
+                R.id.fragment_progressbar);
     }
 
     @Override

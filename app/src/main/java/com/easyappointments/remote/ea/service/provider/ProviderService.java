@@ -21,4 +21,6 @@ public interface ProviderService {
     Call<ProviderModel> get(@Path("id") int id, @QueryMap Map<String, String> options);
     @GET("providers")
     Call<List<ProviderModel>> get(@QueryMap Map<String, String> options);
+    @GET("providers")
+    Call<List<ProviderModel>> get();
 }

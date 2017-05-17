@@ -28,6 +28,8 @@ public class SettingsModel extends Model {
     public String lastName;
     @Column
     public boolean rememberme;
+    @Column
+    public int countNextAppointments;
 
     public static SettingsModel loadSettings(){
         SettingsModel s = new Select().from(SettingsModel.class).executeSingle();
@@ -35,6 +37,7 @@ public class SettingsModel extends Model {
         if(s == null){
             s = new SettingsModel();
             s.rememberme = true;
+            s.countNextAppointments = 5;
             s.save();
         }
 

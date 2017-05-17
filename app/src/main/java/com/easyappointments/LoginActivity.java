@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.easyappointments.common.AsyncWSTask;
 import com.easyappointments.common.Validator;
 import com.easyappointments.db.SettingsModel;
 import com.easyappointments.remote.ea.data.Options;
@@ -150,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(this, username, password, url);
+            mAuthTask = new UserLoginTask(mLoginFormView, username, password, url);
             mAuthTask.execute((Void) null);
         }
     }
@@ -178,17 +179,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private String errorMessage = getString(R.string.unknown_error);
-        private final Context ctx;
+    public class UserLoginTask extends AsyncWSTask{
         private final String mUsername;
         private final String mPassword;
         private final String mUrl;
-
         private ProviderModel providerModel;
 
-        UserLoginTask(Context ctx, String username, String password, String url) {
-            this.ctx=ctx;
+        protected UserLoginTask(View v, String username, String password, String url) {
+            super(v);
+
             mUsername = username;
             mPassword = password;
             mUrl = url;
@@ -196,21 +195,19 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
             ProviderService t = ProviderServiceFactory.getInstance(mUsername,mPassword, mUrl);
             try {
-                Map<String, String> filters = new HashMap<>();
-                filters.put(Options.fields, ProviderModel.fields.id.toString());
-                filters.put(Options.fields, ProviderModel.fields.firstName.toString());
-                filters.put(Options.fields, ProviderModel.fields.lastName.toString());
-                filters.put(Options.fields, ProviderModel.fields.email.toString());
 
-                Response<List<ProviderModel>> r = t.get(filters).execute();
+                Response<List<ProviderModel>> r = t.get().execute();
                 List<ProviderModel> pms = r.body();
 
-                if(pms != null && pms.size() == 1) {
-                    providerModel = pms.get(0);
-                    return true;
+                if(pms != null) {
+                    for(ProviderModel p : pms){
+                        if(p.settings != null && mUsername.equals(p.settings.username)) {
+                            providerModel = p;
+                            return true;
+                        }
+                    }
                 }
 
                 errorMessage = getString(R.string.provider_not_found);
@@ -244,10 +241,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 settings.save();
 
-                Intent homeActivity = new Intent(this.ctx, MainActivity.class);
+                Intent homeActivity = new Intent(mContext, MainActivity.class);
+                homeActivity.putExtra(ProviderModel.fields.services.toString(),providerModel.services);
+                homeActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(homeActivity);
             } else {
-                Snackbar.make(mLoginFormView, getString(R.string.error_login)+": "+errorMessage, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mLoginFormView, errorMessage, Snackbar.LENGTH_SHORT).show();
             }
         }
 

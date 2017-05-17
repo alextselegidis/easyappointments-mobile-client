@@ -8,8 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
+import com.easyappointments.common.AsyncWSTask;
+import com.easyappointments.db.SettingsModel;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
 import com.easyappointments.remote.ea.model.ws.ProviderModel;
@@ -26,12 +27,10 @@ import retrofit2.Response;
 
 public class AppointmentFragment extends BaseFragment<AppointmentsModel> implements IActionFragment<AppointmentsModel>{
     private NextAppointmentsTask nextAppsTask;
+    private List<AppointmentsModel> lastAppointments = null;
 
     public AppointmentFragment() {
-        super(R.string.title_fragment_next_appointment,
-                R.layout.fragment_list,
-                R.id.next_apps_list,
-                R.id.next_apps_progress);
+        super(R.string.title_fragment_next_appointment);
     }
 
     @Nullable
@@ -39,16 +38,14 @@ public class AppointmentFragment extends BaseFragment<AppointmentsModel> impleme
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        nextAppsTask = new NextAppointmentsTask();
-        nextAppsTask.execute((Void) null);
+        if(refresh){
+            nextAppsTask = new NextAppointmentsTask(recyclerView);
+            nextAppsTask.execute((Void) null);
+        }else{
+            recyclerView.setAdapter(new AppointmentRecyclerViewAdapter(lastAppointments, mListener));
+        }
 
         return v;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        nextAppsTask=null;
     }
 
     @Override
@@ -61,26 +58,30 @@ public class AppointmentFragment extends BaseFragment<AppointmentsModel> impleme
         return false;
     }
 
-    public class NextAppointmentsTask extends AsyncTask<Void, Void, Boolean> {
-        private String errorMessage = getString(R.string.unknown_error);
-        List<AppointmentsModel> lastAppointments = null;
-
-        private ProviderModel providerModel;
+    class NextAppointmentsTask extends AsyncWSTask {
+        protected NextAppointmentsTask(View v) {
+            super(v);
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             showProgress(true);
 
+            SettingsModel settings = SettingsModel.loadSettings();
+
             Map<String, String> filters = new HashMap<>();
             filters.put(Options.sort, Options.sort_desc + AppointmentsModel.fields.start.toString());
             filters.put(Options.page, "1");
-            filters.put(Options.length, "1");
+            filters.put(Options.length, Integer.toString(settings.countNextAppointments));
 
             try {
                 AppointmentService appService = AppointmentServiceFactory.getInstance();
 
                 Response<List<AppointmentsModel>> appsResp = appService.get(filters).execute();
                 lastAppointments = appsResp.body();
+
+                if(lastAppointments == null)
+                    errorMessage = getString(R.string.unknown_error);
 
                 return lastAppointments != null;
             } catch (IOException e) {
@@ -91,19 +92,22 @@ public class AppointmentFragment extends BaseFragment<AppointmentsModel> impleme
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
             nextAppsTask = null;
             showProgress(false);
 
             if (success) {
-                recyclerView.setAdapter(new AppointmentRecyclerViewAdapter(lastAppointments, mListener));
-            } else {
-                Snackbar.make(recyclerView, getString(R.string.error_load_appointments)+": "+errorMessage, Snackbar.LENGTH_SHORT).show();
+                refresh = false;
+                ((RecyclerView)mView).setAdapter(new AppointmentRecyclerViewAdapter(lastAppointments, mListener));
             }
         }
 
         @Override
         protected void onCancelled() {
+            super.onCancelled();
+
             nextAppsTask = null;
             showProgress(false);
         }
