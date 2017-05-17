@@ -5,7 +5,7 @@ App Android using Easy!Appointments system (https://github.com/alextselegidis/ea
 This application is designed for a mobility simple management of the Easy!Appointments system.
 
 # Requirements
-0 - Graphics (icons, theme, etc...)
+0 - Graphics (icons, theme, etc...)<br>
 1 - Operator login<br>
 2 - Next appointments list<br>
 3 - Single appointment details<br>
@@ -30,7 +30,7 @@ This application is designed for a mobility simple management of the Easy!Appoin
 # How to contribute to the project
 0 - Checkout repository <br>
 1 - Go to projects tab (https://github.com/matteoventuri7/android-easyappointments/projects/1) <br>
-2 - Choose one card from "To Do" column and write to me android-easyappointments@matteoventuri.eu <br>
+2 - Choose one card from "To Do" column and write to me matteo.venturi7@gmail.com <br>
 
 # Donations
 Help me to manage this project:
