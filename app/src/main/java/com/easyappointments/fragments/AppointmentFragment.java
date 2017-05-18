@@ -1,19 +1,18 @@
-package com.easyappointments;
+package com.easyappointments.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.easyappointments.R;
 import com.easyappointments.common.AsyncWSTask;
 import com.easyappointments.db.SettingsModel;
+import com.easyappointments.fragments.adapter.AppointmentRecyclerViewAdapter;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
-import com.easyappointments.remote.ea.model.ws.ProviderModel;
 import com.easyappointments.remote.ea.service.AppointmentServiceFactory;
 import com.easyappointments.remote.ea.service.appointment.AppointmentService;
 
@@ -25,7 +24,7 @@ import java.util.Map;
 
 import retrofit2.Response;
 
-public class AppointmentFragment extends BaseFragment<AppointmentsModel> implements IActionFragment<AppointmentsModel>{
+public class AppointmentFragment extends BaseFragment<AppointmentsModel> implements IActionFragment<AppointmentsModel> {
     private NextAppointmentsTask nextAppsTask;
     private List<AppointmentsModel> lastAppointments = null;
 

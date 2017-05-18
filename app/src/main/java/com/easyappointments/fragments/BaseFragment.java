@@ -1,4 +1,4 @@
-package com.easyappointments;
+package com.easyappointments.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.easyappointments.R;
 import com.easyappointments.remote.ea.model.ws.BaseModel;
 
 /**

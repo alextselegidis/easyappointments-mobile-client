@@ -1,10 +1,7 @@
-package com.easyappointments;
-
-import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
+package com.easyappointments.fragments.adapter;
 
 import com.easyappointments.common.Formatter;
-import com.easyappointments.remote.ea.model.ws.CustomerModel;
+import com.easyappointments.fragments.IActionFragment;
 import com.easyappointments.remote.ea.model.ws.ServiceModel;
 
 import java.util.List;

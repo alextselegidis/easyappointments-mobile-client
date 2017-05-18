@@ -1,10 +1,12 @@
-package com.easyappointments;
+package com.easyappointments.fragments.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.easyappointments.R;
+import com.easyappointments.fragments.IActionFragment;
 import com.easyappointments.remote.ea.model.ws.BaseModel;
 
 import java.util.List;
@@ -61,7 +63,3 @@ public abstract class BaseRecyclerViewAdapter<T extends BaseModel, I extends IAc
     }
 }
 
-interface IActionFragment<T extends BaseModel>{
-    void onClick(T item);
-    boolean onLongClick(T item);
-}

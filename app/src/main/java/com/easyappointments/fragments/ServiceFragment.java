@@ -1,4 +1,4 @@
-package com.easyappointments;
+package com.easyappointments.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.easyappointments.R;
 import com.easyappointments.common.AsyncWSTask;
 import com.easyappointments.db.SettingsModel;
+import com.easyappointments.fragments.adapter.ServicesRecyclerViewAdapter;
 import com.easyappointments.remote.ea.data.Options;
-import com.easyappointments.remote.ea.model.ws.CustomerModel;
 import com.easyappointments.remote.ea.model.ws.ProviderModel;
 import com.easyappointments.remote.ea.model.ws.ServiceModel;
-import com.easyappointments.remote.ea.service.CustomerServiceFactory;
 import com.easyappointments.remote.ea.service.ServiceServiceFactory;
-import com.easyappointments.remote.ea.service.customer.CustomerService;
 import com.easyappointments.remote.ea.service.service.ServiceService;
 
 import java.io.IOException;

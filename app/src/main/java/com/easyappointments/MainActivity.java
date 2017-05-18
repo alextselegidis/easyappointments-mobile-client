@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.easyappointments.fragments.AppointmentFragment;
+import com.easyappointments.fragments.CustomerFragment;
+import com.easyappointments.fragments.ServiceFragment;
+
 public class MainActivity extends AppCompatActivity {
     public AppointmentFragment getAppsFragment() {
         if(appsFragment == null)

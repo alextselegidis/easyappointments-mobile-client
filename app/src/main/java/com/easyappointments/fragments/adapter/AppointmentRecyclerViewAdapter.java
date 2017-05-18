@@ -1,6 +1,8 @@
-package com.easyappointments;
+package com.easyappointments.fragments.adapter;
 
+import com.easyappointments.R;
 import com.easyappointments.common.Formatter;
+import com.easyappointments.fragments.IActionFragment;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
 
 import java.util.List;

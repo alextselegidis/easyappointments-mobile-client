@@ -1,5 +1,6 @@
-package com.easyappointments;
+package com.easyappointments.fragments.adapter;
 
+import com.easyappointments.fragments.IActionFragment;
 import com.easyappointments.remote.ea.model.ws.CustomerModel;
 
 import java.util.List;
