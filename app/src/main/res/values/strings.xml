@@ -17,7 +17,6 @@
     <string name="unknown_error">Unknown error</string>
     <string name="provider_not_found">Provider not found</string>
     <string name="error_network">Network error</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="title_appointments">Appointments</string>
     <string name="title_customers">Customers</string>
     <string name="title_services">Services</string>

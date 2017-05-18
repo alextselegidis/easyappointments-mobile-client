@@ -11,6 +11,7 @@ import com.easyappointments.common.AsyncWSTask;
 import com.easyappointments.db.SettingsModel;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.CustomerModel;
+import com.easyappointments.remote.ea.model.ws.ProviderModel;
 import com.easyappointments.remote.ea.model.ws.ServiceModel;
 import com.easyappointments.remote.ea.service.CustomerServiceFactory;
 import com.easyappointments.remote.ea.service.ServiceServiceFactory;
@@ -30,6 +31,7 @@ import retrofit2.Response;
  */
 
 public class ServiceFragment extends BaseFragment<ServiceModel> {
+    private int[] servicesProvider;
     private ServicesTask servicesTask;
     private List<ServiceModel> services;
 
@@ -51,6 +53,13 @@ public class ServiceFragment extends BaseFragment<ServiceModel> {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
+
+        Bundle b = getArguments();
+        if(b!=null){
+            this.servicesProvider = b.getIntArray(ProviderModel.fields.services.toString());
+        }else{
+            this.servicesProvider = null;
+        }
 
         if (refresh) {
             servicesTask = new ServicesTask(recyclerView);
@@ -83,10 +92,26 @@ public class ServiceFragment extends BaseFragment<ServiceModel> {
                 ServiceService service = ServiceServiceFactory.getInstance();
 
                 Response<List<ServiceModel>> resp = service.get(filters).execute();
+
                 services = resp.body();
 
                 if (services == null)
                     errorMessage = getString(R.string.unknown_error);
+
+                if(servicesProvider != null){
+                    List<ServiceModel> servicesProviderModel = new ArrayList<>(servicesProvider.length);
+
+                    for(int sid : servicesProvider){
+                        for(ServiceModel s : services){
+                            if(s.id == sid){
+                                servicesProviderModel.add(s);
+                                break;
+                            }
+                        }
+                    }
+
+                    services = servicesProviderModel;
+                }
 
                 return services != null;
             } catch (IOException e) {

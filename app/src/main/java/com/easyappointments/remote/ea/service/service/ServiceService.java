@@ -19,4 +19,6 @@ public interface ServiceService {
     Call<List<ServiceModel>> get(@QueryMap Map<String, String> options);
     @GET("services/{id}")
     Call<ServiceModel> get(@Path("id") int id);
+    @GET("services/{id}")
+    Call<ServiceModel> get(@Path("id") int id, @QueryMap Map<String, String> options);
 }

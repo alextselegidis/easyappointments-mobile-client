@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+        final Bundle b = getIntent().getExtras();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.navigation_services:
                         frag = getServicesFragment();
+                        frag.setArguments(b);
                         break;
                     default:
                         return false;
