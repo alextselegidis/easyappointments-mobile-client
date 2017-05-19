@@ -29,12 +29,12 @@ import retrofit2.Response;
  * Created by matte on 17/05/2017.
  */
 
-public class ServiceFragment extends BaseFragment<ServiceModel> {
+public class ServiceFragmentList extends BaseFragmentList<ServiceModel> {
     private int[] servicesProvider;
     private ServicesTask servicesTask;
     private List<ServiceModel> services;
 
-    public ServiceFragment() {
+    public ServiceFragmentList() {
         super(R.string.title_services);
     }
 

@@ -28,11 +28,11 @@ import retrofit2.Response;
  * Created by matte on 17/05/2017.
  */
 
-public class CustomerFragment extends BaseFragment<CustomerModel>{
+public class CustomerFragmentList extends BaseFragmentList<CustomerModel> {
     private List<CustomerModel> customers = null;
     private CustomersTask customersTask;
 
-    public CustomerFragment() {
+    public CustomerFragmentList() {
         super(R.string.title_customers);
     }
 

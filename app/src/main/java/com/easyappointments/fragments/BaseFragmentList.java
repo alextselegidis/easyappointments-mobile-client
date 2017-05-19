@@ -20,7 +20,7 @@ import com.easyappointments.remote.ea.model.ws.BaseModel;
  * Created by matte on 16/05/2017.
  */
 
-public abstract class BaseFragment<T extends BaseModel> extends Fragment implements IActionFragment<T> {
+public abstract class BaseFragmentList<T extends BaseModel> extends Fragment implements IActionFragment<T> {
     private final int resourceRecyclerView;
     private final int resourceProgressBar;
     private final int resourceLayout;
@@ -33,14 +33,14 @@ public abstract class BaseFragment<T extends BaseModel> extends Fragment impleme
     protected RecyclerView recyclerView;
     private ProgressBar progressBar;
 
-    protected BaseFragment(int resourceTitle, int resourceLayout, int resourceRecyclerView, int resourceProgressBar){
+    protected BaseFragmentList(int resourceTitle, int resourceLayout, int resourceRecyclerView, int resourceProgressBar){
         this.titleRes = resourceTitle;
         this.resourceRecyclerView=resourceRecyclerView;
         this.resourceProgressBar = resourceProgressBar;
         this.resourceLayout=resourceLayout;
     }
 
-    protected BaseFragment(int resourceTitle){
+    protected BaseFragmentList(int resourceTitle){
         this(resourceTitle,
                 R.layout.fragment_list,
                 R.id.recyclerView_list,

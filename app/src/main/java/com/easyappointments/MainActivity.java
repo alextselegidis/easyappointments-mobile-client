@@ -7,32 +7,32 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.easyappointments.fragments.AppointmentFragment;
-import com.easyappointments.fragments.CustomerFragment;
-import com.easyappointments.fragments.ServiceFragment;
+import com.easyappointments.fragments.appointment.AppointmentFragmentList;
+import com.easyappointments.fragments.CustomerFragmentList;
+import com.easyappointments.fragments.ServiceFragmentList;
 
 public class MainActivity extends AppCompatActivity {
-    public AppointmentFragment getAppsFragment() {
+    public AppointmentFragmentList getAppsFragment() {
         if(appsFragment == null)
-            appsFragment = new AppointmentFragment();
+            appsFragment = new AppointmentFragmentList();
         return appsFragment;
     }
 
-    public CustomerFragment getCustomersFragment() {
+    public CustomerFragmentList getCustomersFragment() {
         if(customersFragment == null)
-            customersFragment = new CustomerFragment();
+            customersFragment = new CustomerFragmentList();
         return customersFragment;
     }
 
-    public ServiceFragment getServicesFragment() {
+    public ServiceFragmentList getServicesFragment() {
         if(servicesFragment == null)
-            servicesFragment = new ServiceFragment();
+            servicesFragment = new ServiceFragmentList();
         return servicesFragment;
     }
 
-    private AppointmentFragment appsFragment;
-    private CustomerFragment customersFragment;
-    private ServiceFragment servicesFragment;
+    private AppointmentFragmentList appsFragment;
+    private CustomerFragmentList customersFragment;
+    private ServiceFragmentList servicesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        appsFragment = new AppointmentFragment();
+        appsFragment = new AppointmentFragmentList();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, getAppsFragment()).commit();
     }
 }
