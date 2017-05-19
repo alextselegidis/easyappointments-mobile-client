@@ -26,4 +26,8 @@
     <string name="not_available">Not available</string>
     <string name="title_fragment_next_appointment">Next appointments</string>
     <string name="title_fragment_appointment">Appointment</string>
+    <string name="action_settings">Settings</string>
+    <string name="tabbed_title_appointment">Appointment</string>
+    <string name="tabbed_title_customer">Customer</string>
+    <string name="tabbed_title_service">Service</string>
 </resources>

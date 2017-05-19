@@ -30,7 +30,14 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".detail.AppointmentDetail"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.easyappointments.MainActivity" />
         </activity>
     </application>
 

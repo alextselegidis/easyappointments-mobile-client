@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.easyappointments.fragments.appointment.AppointmentFragmentList;
+import com.easyappointments.fragments.AppointmentFragmentList;
 import com.easyappointments.fragments.CustomerFragmentList;
 import com.easyappointments.fragments.ServiceFragmentList;
 

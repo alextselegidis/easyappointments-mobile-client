@@ -16,6 +16,8 @@ import retrofit2.http.QueryMap;
  */
 
 public interface AppointmentService {
+    @GET("appointments/{id}")
+    Call<AppointmentsModel> get(@Path("id") int id);
     @GET("appointments")
     Call<List<AppointmentsModel>> get(@QueryMap Map<String, String> options);
 }

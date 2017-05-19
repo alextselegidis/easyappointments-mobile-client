@@ -1,5 +1,6 @@
-package com.easyappointments.fragments.appointment;
+package com.easyappointments.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.easyappointments.MainActivity;
 import com.easyappointments.R;
 import com.easyappointments.common.AsyncWSTask;
 import com.easyappointments.db.SettingsModel;
+import com.easyappointments.detail.AppointmentDetail;
 import com.easyappointments.fragments.BaseFragmentList;
 import com.easyappointments.fragments.adapter.AppointmentRecyclerViewAdapter;
 import com.easyappointments.remote.ea.data.Options;
 import com.easyappointments.remote.ea.model.ws.AppointmentsModel;
+import com.easyappointments.remote.ea.model.ws.ProviderModel;
 import com.easyappointments.remote.ea.service.AppointmentServiceFactory;
 import com.easyappointments.remote.ea.service.appointment.AppointmentService;
 
@@ -50,7 +54,9 @@ public class AppointmentFragmentList extends BaseFragmentList<AppointmentsModel>
 
     @Override
     public void onClick(AppointmentsModel item) {
-
+        Intent appDetail = new Intent(getContext(), AppointmentDetail.class);
+        appDetail.putExtra(AppointmentDetail.BUNDLE_MODEL_ID, item.id);
+        startActivity(appDetail);
     }
 
     @Override
