@@ -12,21 +12,28 @@ import com.easyappointments.fragments.CustomerFragmentList;
 import com.easyappointments.fragments.ServiceFragmentList;
 
 public class MainActivity extends AppCompatActivity {
+
     public AppointmentFragmentList getAppsFragment() {
-        if(appsFragment == null)
+        if (appsFragment == null) {
             appsFragment = new AppointmentFragmentList();
+        }
+
         return appsFragment;
     }
 
     public CustomerFragmentList getCustomersFragment() {
-        if(customersFragment == null)
+        if (customersFragment == null) {
             customersFragment = new CustomerFragmentList();
+        }
+
         return customersFragment;
     }
 
     public ServiceFragmentList getServicesFragment() {
-        if(servicesFragment == null)
+        if (servicesFragment == null) {
             servicesFragment = new ServiceFragmentList();
+        }
+
         return servicesFragment;
     }
 
@@ -73,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             }
-
         });
 
         appsFragment = new AppointmentFragmentList();
